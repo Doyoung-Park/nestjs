@@ -6,12 +6,12 @@ import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UserRepository extends Repository<User>{
-    constructor(private dataSource: DataSource){
+    constructor(private dataSource: DataSource) {
         super(User, dataSource.createEntityManager());
     }
 
-    async createUser(AuthCredentialDto: AuthCredentialDto):Promise<void>{
-        const {username, password} = AuthCredentialDto;
+    async createUser(AuthCredentialDto: AuthCredentialDto): Promise<string> {
+        const { username, password } = AuthCredentialDto;
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -20,15 +20,16 @@ export class UserRepository extends Repository<User>{
             password: hashedPassword,
         });
         try {
-            await this.save(user);    
+            await this.save(user);
+            return 'Create User Success';
         } catch (error) {
             console.error(error);
-            if(error.code ==='23505'){
+            if (error.code === '23505') {
                 throw new ConflictException('Existing username');
-            }else{
+            } else {
                 throw new InternalServerErrorException();
             }
         }
-        
+
     }
 }

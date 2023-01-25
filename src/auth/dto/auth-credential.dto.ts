@@ -1,6 +1,6 @@
 import { IsNotEmpty, Matches, MaxLength, MinLength } from "class-validator";
 
-export class AuthCredentialDto{
+export class AuthCredentialDto {
     @IsNotEmpty()
     @MinLength(4)
     @MaxLength(20)
@@ -9,7 +9,7 @@ export class AuthCredentialDto{
     @IsNotEmpty()
     @MinLength(4)
     @MaxLength(20)
-    @Matches(/^[a-zA-Z0-9]*$/,{
+    @Matches(/^[a-zA-Z0-9]*$/, {
         message: 'password only accepts english and number'
     })
     password: string;
