@@ -6,11 +6,12 @@ import { AuthService } from './auth.service';
 import { UserRepository } from '../auth/user.repository';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import { JwtStrategy } from 'src/auth/jwt.strategy';
 
 @Module({
   imports: [
     PassportModule.register({defaultStrategy: 'jwt'}),
-    JwtModule.register({
+    JwtModule.register({  // jwt 토큰을 생성하기 위한 jwtModule
       secret: 'Secret1234',
       signOptions:{
         expiresIn: 60 * 60,
@@ -19,6 +20,7 @@ import { PassportModule } from '@nestjs/passport';
     TypeOrmModule.forFeature([UserRepository])
   ],
   controllers: [AuthController],
-  providers: [UserRepository, AuthService]
+  providers: [UserRepository, AuthService, JwtStrategy], 
+  exports: [JwtStrategy, PassportModule]
 })
 export class AuthModule {}
